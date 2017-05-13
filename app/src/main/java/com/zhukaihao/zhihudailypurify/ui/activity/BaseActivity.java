@@ -41,4 +41,8 @@ public class BaseActivity extends AppCompatActivity {
     public void showSnackbar(int resId) {
         Snackbar.make(mCoordinatorLayout, resId, Snackbar.LENGTH_SHORT).show();
     }
+
+    public void showSnackbar(String str) {
+        Snackbar.make(mCoordinatorLayout, str, Snackbar.LENGTH_SHORT).show();
+    }
 }

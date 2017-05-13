@@ -21,7 +21,8 @@ import com.zhukaihao.zhihudailypurify.R;
 
 public class MainActivity extends BaseActivity {
     private static final int PAGE_COUNT = 7;
-    
+    private int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResID = R.layout.activity_main;
@@ -34,19 +35,19 @@ public class MainActivity extends BaseActivity {
         assert viewPager != null;
         viewPager.setOffscreenPageLimit(PAGE_COUNT);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_pick_date);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // 界面测试
+        ((FloatingActionButton) findViewById(R.id.fab_pick_date)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make((CoordinatorLayout) findViewById(R.id.coordinator_layout), "Hello. I am Snackbar!", Snackbar.LENGTH_SHORT)
-                        .setAction("Undo", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                            }
-                        })
-                        .show();
+                showSnackbar("Hello, count " + ++count);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
 }

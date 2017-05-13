@@ -15,11 +15,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/fragment_frame"
-        style="@style/baseLayoutParam"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-
-    </FrameLayout>
+    <android.support.v4.widget.NestedScrollView
+        style="@style/licenseContainer"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <TextView
+            android:id="@+id/license_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

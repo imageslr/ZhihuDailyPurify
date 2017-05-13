@@ -23,6 +23,11 @@
     <style name="mainPagerStyle" parent="baseLayoutParam">
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="licenseContainer" parent="baseLayoutParam">
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+
     <style name="tabLayoutStyle" parent="Widget.Design.TabLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

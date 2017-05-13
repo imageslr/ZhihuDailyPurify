@@ -97,4 +97,5 @@ Unless required by applicable law or agreed to in writing, software distributed 
     <string name="share_to">Share to…</string>
     <string name="accelerate_server_unlock">Accelerate server unlocked</string>
     <string name="share_this_news">Share this news</string>
+    <string name="inspired_by">Inspired by: @izzyleung</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.zhukaihao.zhihudailypurify.ui.activity;
 
-
 import android.os.Bundle;
+
 import com.zhukaihao.zhihudailypurify.R;
 import com.zhukaihao.zhihudailypurify.ui.fragment.PrefsFragment;
 

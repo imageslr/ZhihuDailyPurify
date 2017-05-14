@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">知乎日报·净化</string>
+    <string name="app_name">知乎日报</string>
     <string name="action_settings">偏好设置</string>
     <string name="news_preview_image">图片预览</string>
     <string name="auto_refresh_summary">进入软件时，是否允许软件自动刷新？</string>
@@ -18,7 +18,7 @@
     <string name="no_browser"><![CDATA[您没有安装浏览器呢~ >_<]]></string>
     <string name="not_coming"><![CDATA[这一天还没有来临呢！>_<]]></string>
     <string name="not_born"><![CDATA[这一天知乎日报还没有诞生呢！>_<]]></string>
-    <string name="zhihu_daily_today">今天 |</string>
+    <string name="zhihu_daily_today">今日之『知乎日报』|</string>
     <string name="using_accelerate_server">使用加速服务器</string>
     <string name="using_accelerate_server_summary">勾选此选项后，浏览旧日内容速度更快！</string>
     <string name="settings_network_settings">网络设定</string>

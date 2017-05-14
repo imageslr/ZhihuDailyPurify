@@ -28,16 +28,16 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResID = R.layout.activity_main;
-
         super.onCreate(savedInstanceState);
 
+        // 设置tab与pager
         TabLayout tabs = (TabLayout) findViewById(R.id.main_pager_tabs);
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
         assert tabs != null;
         assert viewPager != null;
         viewPager.setOffscreenPageLimit(PAGE_COUNT);
-        viewPager.setOffscreenPageLimit(PAGE_COUNT);
 
+        // 必须先设置adapter，再设置tab
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
@@ -45,14 +45,6 @@ public class MainActivity extends BaseActivity {
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_pick_date);
         assert floatingActionButton != null;
         //floatingActionButton.setOnClickListener(v -> prepareIntent(PickDateActivity.class));
-
-        // 界面测试
-        ((FloatingActionButton) findViewById(R.id.fab_pick_date)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSnackbar("Hello, count " + ++count);
-            }
-        });
     }
 
     @Override
@@ -78,7 +70,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private class MainPagerAdapter extends FragmentStatePagerAdapter {
-        public MainPagerAdapter(FragmentManager fm) {
+        MainPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

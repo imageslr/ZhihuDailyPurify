@@ -1,9 +1,5 @@
 package com.zhukaihao.zhihudailypurify.adapter;
 
-/**
- * Created by zhukaihao on 17/5/14.
- */
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,7 +23,6 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,22 +37,19 @@ import com.zhukaihao.zhihudailypurify.support.Constants;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.CardViewHolder> {
     private List<DailyNews> newsList;
 
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .showImageOnLoading(R.drawable.noimage)
+            .showImageOnFail(R.drawable.noimage)
+            .showImageForEmptyUri(R.drawable.lks_for_blank_url)
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .considerExifParams(true)
+            .build();
+    private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+
     public NewsAdapter(List<DailyNews> newsList) {
         this.newsList = newsList;
-
-
-        // Test !!!!!
-        DailyNews dailyNews = new DailyNews();
-        dailyNews.setDailyTitle("生活太无聊了，能不能来点「惊天地、泣鬼神」的情节");
-        dailyNews.setDate("20170514");
-        ArrayList<Question> list = new ArrayList<Question>();
-        Question q = new Question();
-        q.setTitle("有哪些比较好看的纪录片？");
-        q.setUrl("http://www.zhihu.com/question/46245025");
-        list.add(q);
-        dailyNews.setQuestions(list);
-        dailyNews.setThumbnailUrl("https://pic3.zhimg.com/v2-aac0082b1521565e4c11ee0af4609f86.jpg");
-        this.newsList.add(dailyNews);
 
         setHasStableIds(true);
     }
@@ -106,6 +98,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.CardViewHolder
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
         DailyNews dailyNews = newsList.get(position);
+        imageLoader.displayImage(dailyNews.getThumbnailUrl(), holder.newsImage, options, animateFirstListener);
 
         if (dailyNews.getQuestions().size() > 1) {
             holder.questionTitle.setText(dailyNews.getDailyTitle());

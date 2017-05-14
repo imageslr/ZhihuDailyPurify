@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.zhukaihao.zhihudailypurify.bean.DailyNews;
 
 public final class Constants {
     private Constants() {
@@ -25,6 +26,12 @@ public final class Constants {
         public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.US);
         @SuppressWarnings("deprecation")
         public static final Date birthday = new java.util.Date(113, 4, 19); // May 19th, 2013
+    }
+
+    public static final class Types {
+        public static final Type newsListType = new TypeToken<List<DailyNews>>() {
+
+        }.getType();
     }
 
     public static final class Strings {

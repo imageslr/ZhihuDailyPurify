@@ -1,7 +1,6 @@
 package com.zhukaihao.zhihudailypurify.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,18 +8,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.zhukaihao.zhihudailypurify.R;
-import com.zhukaihao.zhihudailypurify.adapter.NewsAdapter;
-import com.zhukaihao.zhihudailypurify.bean.DailyNews;
-import com.zhukaihao.zhihudailypurify.bean.Question;
-import com.zhukaihao.zhihudailypurify.support.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsListFragment extends Fragment {
+import com.zhukaihao.zhihudailypurify.R;
+import com.zhukaihao.zhihudailypurify.ZhihuDailyPurifyApplication;
+import com.zhukaihao.zhihudailypurify.adapter.NewsAdapter;
+import com.zhukaihao.zhihudailypurify.bean.DailyNews;
+import com.zhukaihao.zhihudailypurify.observable.NewsListFromAccelerateServerObservable;
+import com.zhukaihao.zhihudailypurify.observable.NewsListFromDatabaseObservable;
+import com.zhukaihao.zhihudailypurify.observable.NewsListFromZhihuObservable;
+import com.zhukaihao.zhihudailypurify.support.Constants;
+import com.zhukaihao.zhihudailypurify.task.SaveNewsListTask;
+import com.zhukaihao.zhihudailypurify.ui.activity.BaseActivity;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+public class NewsListFragment extends Fragment
+        implements SwipeRefreshLayout.OnRefreshListener, Observer<List<DailyNews>> {
     private List<DailyNews> newsList = new ArrayList<>();
 
     private String date;
@@ -31,6 +39,7 @@ public class NewsListFragment extends Fragment {
     private boolean isRefreshed = false;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,19 +49,17 @@ public class NewsListFragment extends Fragment {
             date = bundle.getString(Constants.BundleKeys.DATE);
             isToday = bundle.getBoolean(Constants.BundleKeys.IS_FIRST_PAGE);
 
-            // 防止重新创建Fragment
-            //setRetainInstance(true);
+            setRetainInstance(true);
         }
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
 
         assert view != null;
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.news_list);
-        mRecyclerView.setHasFixedSize(!isToday);  // 优化：旧的日报内容不变
+        mRecyclerView.setHasFixedSize(!isToday);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -62,7 +69,7 @@ public class NewsListFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-        //mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.color_primary);
 
         return view;
@@ -71,5 +78,88 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        NewsListFromDatabaseObservable.ofDate(date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        refreshIf(shouldRefreshOnVisibilityChange(isVisibleToUser));
+    }
+
+    private void refreshIf(boolean prerequisite) {
+        if (prerequisite) {
+            doRefresh();
+        }
+    }
+
+    private void doRefresh() {
+        getNewsListObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+    }
+
+    private Observable<List<DailyNews>> getNewsListObservable() {
+        if (shouldSubscribeToZhihu()) {
+            return NewsListFromZhihuObservable.ofDate(date);
+        } else {
+            return NewsListFromAccelerateServerObservable.ofDate(date);
+        }
+    }
+
+    private boolean shouldSubscribeToZhihu() {
+        return isToday || !shouldUseAccelerateServer();
+    }
+
+    private boolean shouldUseAccelerateServer() {
+        return ZhihuDailyPurifyApplication.getSharedPreferences()
+                .getBoolean(Constants.SharedPreferencesKeys.KEY_SHOULD_USE_ACCELERATE_SERVER, false);
+    }
+
+    private boolean shouldAutoRefresh() {
+        return ZhihuDailyPurifyApplication.getSharedPreferences()
+                .getBoolean(Constants.SharedPreferencesKeys.KEY_SHOULD_AUTO_REFRESH, true);
+    }
+
+    private boolean shouldRefreshOnVisibilityChange(boolean isVisibleToUser) {
+        return isVisibleToUser && shouldAutoRefresh() && !isRefreshed;
+    }
+
+    @Override
+    public void onRefresh() {
+        doRefresh();
+    }
+
+    @Override
+    public void onNext(List<DailyNews> newsList) {
+        this.newsList = newsList;
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        if (isAdded()) {
+            ((BaseActivity) getActivity()).showSnackbar(R.string.network_error);
+        }
+    }
+
+    @Override
+    public void onCompleted() {
+        isRefreshed = true;
+
+        mSwipeRefreshLayout.setRefreshing(false);
+        mAdapter.updateNewsList(newsList);
+
+        new SaveNewsListTask(newsList).execute();
     }
 }

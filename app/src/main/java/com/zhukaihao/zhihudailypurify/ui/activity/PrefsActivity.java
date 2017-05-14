@@ -1,8 +1,5 @@
 package com.zhukaihao.zhihudailypurify.ui.activity;
 
-/**
- * Created by zhukaihao on 17/5/13.
- */
 
 import android.os.Bundle;
 import com.zhukaihao.zhihudailypurify.R;

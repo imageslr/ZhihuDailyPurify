@@ -2,16 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preference_screen"
     android:id="@+id/preference_screen">
-    <PreferenceCategory
-        android:key="settings_network_settings"
-        android:title="@string/settings_network_settings">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:enabled="true"
-            android:key="using_accelerate_server?"
-            android:summary="@string/using_accelerate_server_summary"
-            android:title="@string/using_accelerate_server"/>
-    </PreferenceCategory>
 
     <PreferenceCategory
         android:key="settings_settings"

@@ -13,10 +13,6 @@ import com.zhukaihao.zhihudailypurify.ZhihuDailyPurifyApplication;
 import com.zhukaihao.zhihudailypurify.support.Check;
 import com.zhukaihao.zhihudailypurify.ui.activity.*;
 
-/**
- * Created by zhukaihao on 17/5/13.
- */
-
 public class PrefsFragment extends PreferenceFragment
         implements Preference.OnPreferenceClickListener {
     @Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">知乎日报·净化</string>
+    <string name="app_name">知乎日报</string>
     <string name="action_settings">偏好设置</string>
     <string name="news_preview_image">图片预览</string>
     <string name="auto_refresh_summary">进入软件时，是否允许软件自动刷新？</string>

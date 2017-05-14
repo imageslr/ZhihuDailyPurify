@@ -58,8 +58,8 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return prepareIntent(PrefsActivity.class);
-//            case R.id.action_go_to_search:
-//                return prepareIntent(SearchActivity.class);
+            case R.id.action_go_to_search:
+                return prepareIntent(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }

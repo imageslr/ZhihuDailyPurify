@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.zhukaihao.zhihudailypurify">
+<manifest
+    package="com.zhukaihao.zhihudailypurify"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".ZhihuDailyPurifyApplication"
@@ -20,9 +21,14 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:alwaysRetainTaskState="true"/>
 
         <activity
             android:name=".ui.activity.PickDateActivity"
@@ -40,7 +46,7 @@
 
         <activity
             android:name=".ui.activity.LicenseActivity"
-            android:label="@string/settings_others_about"
+            android:label="@string/action_settings"
             android:theme="@style/Theme.ZhihuDailyPurify.Prefs"/>
     </application>
 </manifest>

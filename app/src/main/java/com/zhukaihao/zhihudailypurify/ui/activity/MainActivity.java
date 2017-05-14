@@ -2,7 +2,9 @@ package com.zhukaihao.zhihudailypurify.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -20,19 +23,21 @@ import com.zhukaihao.zhihudailypurify.ui.fragment.NewsListFragment;
 
 public class MainActivity extends BaseActivity {
     private static final int PAGE_COUNT = 7;
-    
+    private int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResID = R.layout.activity_main;
-
         super.onCreate(savedInstanceState);
 
+        // 设置tab与pager
         TabLayout tabs = (TabLayout) findViewById(R.id.main_pager_tabs);
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
         assert tabs != null;
         assert viewPager != null;
         viewPager.setOffscreenPageLimit(PAGE_COUNT);
 
+        // 必须先设置adapter，再设置tab
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
@@ -53,8 +58,8 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return prepareIntent(PrefsActivity.class);
-            case R.id.action_go_to_search:
-                return prepareIntent(SearchActivity.class);
+//            case R.id.action_go_to_search:
+//                return prepareIntent(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -65,7 +70,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private class MainPagerAdapter extends FragmentStatePagerAdapter {
-        public MainPagerAdapter(FragmentManager fm) {
+        MainPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -81,6 +86,7 @@ public class MainActivity extends BaseActivity {
             bundle.putString(Constants.BundleKeys.DATE, date);
             bundle.putBoolean(Constants.BundleKeys.IS_FIRST_PAGE, i == 0);
             bundle.putBoolean(Constants.BundleKeys.IS_SINGLE, false);
+            bundle.putInt("ARG_PAGE", i);
 
             newFragment.setArguments(bundle);
             return newFragment;
@@ -100,4 +106,5 @@ public class MainActivity extends BaseActivity {
                     + DateFormat.getDateInstance().format(displayDate.getTime());
         }
     }
+
 }

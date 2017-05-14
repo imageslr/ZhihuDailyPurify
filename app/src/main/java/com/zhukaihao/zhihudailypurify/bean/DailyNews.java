@@ -3,10 +3,10 @@ package com.zhukaihao.zhihudailypurify.bean;
 import java.util.List;
 
 public final class DailyNews {
-    private String date;
-    private String dailyTitle;
-    private String thumbnailUrl;
-    private List<Question> questions;
+    private String date;                // 日期
+    private String dailyTitle;          // 小标题
+    private String thumbnailUrl;        // 缩略图
+    private List<Question> questions;   // 问题信息：问题，链接
 
     public String getDate() {
         return date;

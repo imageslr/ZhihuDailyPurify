@@ -34,10 +34,6 @@
             android:alwaysRetainTaskState="true"/>
 
         <activity
-            android:name=".ui.activity.SearchActivity"
-            android:alwaysRetainTaskState="true"/>
-
-        <activity
             android:name=".ui.activity.PrefsActivity"
             android:label="@string/action_settings"
             android:theme="@style/Theme.ZhihuDailyPurify.Prefs"/>

@@ -18,6 +18,8 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import com.zhukaihao.zhihudailypurify.R;
+import com.zhukaihao.zhihudailypurify.support.Constants;
+import com.zhukaihao.zhihudailypurify.ui.fragment.NewsListFragment;
 
 public class MainActivity extends BaseActivity {
     private static final int PAGE_COUNT = 7;
@@ -34,6 +36,15 @@ public class MainActivity extends BaseActivity {
         assert tabs != null;
         assert viewPager != null;
         viewPager.setOffscreenPageLimit(PAGE_COUNT);
+        viewPager.setOffscreenPageLimit(PAGE_COUNT);
+
+        MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_pick_date);
+        assert floatingActionButton != null;
+        //floatingActionButton.setOnClickListener(v -> prepareIntent(PickDateActivity.class));
 
         // 界面测试
         ((FloatingActionButton) findViewById(R.id.fab_pick_date)).setOnClickListener(new View.OnClickListener() {
@@ -64,6 +75,44 @@ public class MainActivity extends BaseActivity {
     private boolean prepareIntent(Class clazz) {
         startActivity(new Intent(MainActivity.this, clazz));
         return true;
+    }
+
+    private class MainPagerAdapter extends FragmentStatePagerAdapter {
+        public MainPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            Bundle bundle = new Bundle();
+            Fragment newFragment = new NewsListFragment();
+
+            Calendar dateToGetUrl = Calendar.getInstance();
+            dateToGetUrl.add(Calendar.DAY_OF_YEAR, 1 - i);
+            String date = Constants.Dates.simpleDateFormat.format(dateToGetUrl.getTime());
+
+            bundle.putString(Constants.BundleKeys.DATE, date);
+            bundle.putBoolean(Constants.BundleKeys.IS_FIRST_PAGE, i == 0);
+            bundle.putBoolean(Constants.BundleKeys.IS_SINGLE, false);
+            bundle.putInt("ARG_PAGE", i);
+
+            newFragment.setArguments(bundle);
+            return newFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Calendar displayDate = Calendar.getInstance();
+            displayDate.add(Calendar.DAY_OF_YEAR, -position);
+
+            return (position == 0 ? getString(R.string.zhihu_daily_today) + " " : "")
+                    + DateFormat.getDateInstance().format(displayDate.getTime());
+        }
     }
 
 }

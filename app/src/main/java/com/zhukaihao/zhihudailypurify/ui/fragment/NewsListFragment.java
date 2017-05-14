@@ -16,7 +16,6 @@ import com.zhukaihao.zhihudailypurify.R;
 import com.zhukaihao.zhihudailypurify.ZhihuDailyPurifyApplication;
 import com.zhukaihao.zhihudailypurify.adapter.NewsAdapter;
 import com.zhukaihao.zhihudailypurify.bean.DailyNews;
-import com.zhukaihao.zhihudailypurify.observable.NewsListFromAccelerateServerObservable;
 import com.zhukaihao.zhihudailypurify.observable.NewsListFromDatabaseObservable;
 import com.zhukaihao.zhihudailypurify.observable.NewsListFromZhihuObservable;
 import com.zhukaihao.zhihudailypurify.support.Constants;
@@ -37,6 +36,7 @@ public class NewsListFragment extends Fragment
     // Fragment is single in SingleDayNewsActivity
     private boolean isToday;
     private boolean isRefreshed = false;
+    private boolean isFromDatePicker = false;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -48,6 +48,7 @@ public class NewsListFragment extends Fragment
             Bundle bundle = getArguments();
             date = bundle.getString(Constants.BundleKeys.DATE);
             isToday = bundle.getBoolean(Constants.BundleKeys.IS_FIRST_PAGE);
+            isFromDatePicker = bundle.getBoolean(Constants.BundleKeys.IS_FROM_DATE_PICKER);
 
             setRetainInstance(true);
         }
@@ -79,10 +80,18 @@ public class NewsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
+        // 从数据库获取，数据库不为空时返回一个List<DailyNews>的Observable
         NewsListFromDatabaseObservable.ofDate(date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
+    }
+
+    // 是否在获得焦点时刷新：1.获取到焦点，2.开启自动刷新，3.还没有刷新过
+    private boolean shouldRefreshOnVisibilityChange(boolean isVisibleToUser) {
+        boolean shouldAutoRefresh = ZhihuDailyPurifyApplication.getSharedPreferences()
+                .getBoolean(Constants.SharedPreferencesKeys.KEY_SHOULD_AUTO_REFRESH, true);
+        return isVisibleToUser && shouldAutoRefresh && !isRefreshed;
     }
 
     @Override
@@ -110,29 +119,7 @@ public class NewsListFragment extends Fragment
     }
 
     private Observable<List<DailyNews>> getNewsListObservable() {
-        if (shouldSubscribeToZhihu()) {
-            return NewsListFromZhihuObservable.ofDate(date);
-        } else {
-            return NewsListFromAccelerateServerObservable.ofDate(date);
-        }
-    }
-
-    private boolean shouldSubscribeToZhihu() {
-        return isToday || !shouldUseAccelerateServer();
-    }
-
-    private boolean shouldUseAccelerateServer() {
-        return ZhihuDailyPurifyApplication.getSharedPreferences()
-                .getBoolean(Constants.SharedPreferencesKeys.KEY_SHOULD_USE_ACCELERATE_SERVER, false);
-    }
-
-    private boolean shouldAutoRefresh() {
-        return ZhihuDailyPurifyApplication.getSharedPreferences()
-                .getBoolean(Constants.SharedPreferencesKeys.KEY_SHOULD_AUTO_REFRESH, true);
-    }
-
-    private boolean shouldRefreshOnVisibilityChange(boolean isVisibleToUser) {
-        return isVisibleToUser && shouldAutoRefresh() && !isRefreshed;
+        return NewsListFromZhihuObservable.ofDate(date);
     }
 
     @Override
@@ -155,11 +142,16 @@ public class NewsListFragment extends Fragment
 
     @Override
     public void onCompleted() {
-        isRefreshed = true;
+        if(!newsList.isEmpty()) {
+            isRefreshed = true;
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        if(newsList.isEmpty() && isFromDatePicker) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            doRefresh();
+        }
 
-        mSwipeRefreshLayout.setRefreshing(false);
         mAdapter.updateNewsList(newsList);
-
         new SaveNewsListTask(newsList).execute();
     }
 }

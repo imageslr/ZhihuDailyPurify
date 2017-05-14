@@ -38,6 +38,7 @@ public class SingleDayNewsActivity extends BaseActivity {
         bundle.putBoolean(Constants.BundleKeys.IS_FIRST_PAGE,
                 isSameDay(calendar, Calendar.getInstance()));
         bundle.putBoolean(Constants.BundleKeys.IS_SINGLE, true);
+        bundle.putBoolean(Constants.BundleKeys.IS_FROM_DATE_PICKER, true);
 
         newFragment.setArguments(bundle);
 

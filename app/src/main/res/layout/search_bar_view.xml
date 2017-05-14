@@ -45,7 +45,7 @@
                 android:minWidth="160dip"
                 android:paddingLeft="8dip"
                 android:paddingRight="8dip"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textCursorDrawable="@null"/>
 
             <ImageView

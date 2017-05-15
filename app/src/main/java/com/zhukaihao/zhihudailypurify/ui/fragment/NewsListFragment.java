@@ -80,7 +80,7 @@ public class NewsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        // 从数据库获取，数据库不为空时返回一个List<DailyNews>的Observable
+        // 从数据库获取，返回一个List<DailyNews>的Observable
         NewsListFromDatabaseObservable.ofDate(date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -71,6 +71,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.CardViewHolder
                 .from(context)
                 .inflate(R.layout.news_list_item, parent, false);
 
+        // 为CardView添加事件监听器
         return new CardViewHolder(itemView, new CardViewHolder.ClickResponseListener() {
             @Override
             public void onWholeClick(int position) {

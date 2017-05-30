@@ -28,7 +28,7 @@ import com.zhukaihao.zhihudailypurify.R;
  * Simplified version of SearchView, only EditText and a clear text button is supported
  * Thanks to code of SearchView in AppCompat
  */
-public class IzzySearchView extends LinearLayout {
+public class SearchTextView extends LinearLayout {
     static final AutoCompleteTextViewReflector HIDDEN_METHOD_INVOKER = new AutoCompleteTextViewReflector();
 
     private boolean mClearingFocus;
@@ -43,17 +43,17 @@ public class IzzySearchView extends LinearLayout {
                 getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (imm != null) {
-            HIDDEN_METHOD_INVOKER.showSoftInputUnchecked(imm, IzzySearchView.this, 0);
+            HIDDEN_METHOD_INVOKER.showSoftInputUnchecked(imm, SearchTextView.this, 0);
         }
     };
 
     private Runnable mUpdateDrawableStateRunnable = this::updateFocusedState;
 
-    public IzzySearchView(Context context) {
+    public SearchTextView(Context context) {
         this(context, null);
     }
 
-    public IzzySearchView(Context context, AttributeSet attrs) {
+    public SearchTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         LayoutInflater inflater = (LayoutInflater) context
@@ -250,14 +250,14 @@ public class IzzySearchView extends LinearLayout {
 
     public static class SearchAutoComplete extends AppCompatAutoCompleteTextView {
         private int mThreshold;
-        private IzzySearchView mSearchView;
+        private SearchTextView mSearchView;
 
         public SearchAutoComplete(Context context, AttributeSet attrs) {
             super(context, attrs);
             mThreshold = getThreshold();
         }
 
-        void setSearchView(IzzySearchView searchView) {
+        void setSearchView(SearchTextView searchView) {
             mSearchView = searchView;
         }
 

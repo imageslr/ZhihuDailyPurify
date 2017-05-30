@@ -202,12 +202,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.CardViewHolder
     }
 
     private void shareQuestion(Context context, String questionTitle, String questionUrl) {
+
+        // 发送短信的Intent
         Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        // 设置文本类型与短信内容
         share.setType("text/plain");
-        //noinspection deprecation
-        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         share.putExtra(Intent.EXTRA_TEXT,
                 questionTitle + " " + questionUrl + Constants.Strings.SHARE_FROM_ZHIHU);
+        // 选择收件人
         context.startActivity(Intent.createChooser(share, context.getString(R.string.share_to)));
     }
 

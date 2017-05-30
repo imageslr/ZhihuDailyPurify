@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,10 @@ import com.zhukaihao.zhihudailypurify.observable.NewsListFromZhihuObservable;
 import com.zhukaihao.zhihudailypurify.support.Constants;
 import com.zhukaihao.zhihudailypurify.task.SaveNewsListTask;
 import com.zhukaihao.zhihudailypurify.ui.activity.BaseActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -89,6 +94,7 @@ public class NewsListFragment extends Fragment
 
     // 是否在获得焦点时刷新：1.获取到焦点，2.开启自动刷新，3.还没有刷新过
     private boolean shouldRefreshOnVisibilityChange(boolean isVisibleToUser) {
+
         boolean shouldAutoRefresh = ZhihuDailyPurifyApplication.getSharedPreferences()
                 .getBoolean(Constants.SharedPreferencesKeys.KEY_SHOULD_AUTO_REFRESH, true);
         return isVisibleToUser && shouldAutoRefresh && !isRefreshed;

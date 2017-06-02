@@ -41,23 +41,13 @@ public class SearchActivity extends BaseActivity implements Observer<List<DailyN
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        // 搜索出结果时，不再自动聚焦
-        if(!newsList.isEmpty()) {
-            searchView.setmClearingFocus(true);
-        }
-    }
-
-    @Override
     public void onDestroy() {
         searchNewsFragment = null;
 
         super.onDestroy();
     }
 
-    @Override   // 返回按钮的自定义事件
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -76,9 +66,9 @@ public class SearchActivity extends BaseActivity implements Observer<List<DailyN
             searchView.clearFocus();
             searchSubscription = NewsListFromSearchObservable.withKeyword(query)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())           // 在io线程获取数据，在主线程显示数据
-                    .doOnSubscribe(this::onSubscribe)       // 被观察者被订阅时执行的动作
-                    .doOnUnsubscribe(this::onUnsubscribe)   // 被观察者被取消订阅时执行的动作
+                    .subscribeOn(Schedulers.io())
+                    .doOnSubscribe(this::onSubscribe)
+                    .doOnUnsubscribe(this::onUnsubscribe)
                     .subscribe(this);
             return true;
         });
@@ -90,7 +80,7 @@ public class SearchActivity extends BaseActivity implements Observer<List<DailyN
 
         setSupportActionBar(mToolBar);
         //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 加上返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initDialog() {

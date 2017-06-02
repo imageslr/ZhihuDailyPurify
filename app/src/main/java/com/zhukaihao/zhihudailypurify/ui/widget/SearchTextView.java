@@ -18,7 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
 
 import java.lang.reflect.Method;
 
@@ -97,13 +96,10 @@ public class SearchTextView extends LinearLayout {
         updateViewsVisibility();
     }
 
-    // 是否是横屏
     static boolean isLandscapeMode(Context context) {
         return context.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
     }
-
-    public void setmClearingFocus(boolean e) {this.mClearingFocus = e;}
 
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
@@ -129,7 +125,6 @@ public class SearchTextView extends LinearLayout {
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
-
         super.onWindowFocusChanged(hasWindowFocus);
         postUpdateFocusedState();
     }
@@ -196,7 +191,7 @@ public class SearchTextView extends LinearLayout {
 
     private void updateFocusedState() {
         boolean focused = mQueryTextView.hasFocus();
-        //mSearchPlate.getBackground().setState(focused ? FOCUSED_STATE_SET : EMPTY_STATE_SET);
+        mSearchPlate.getBackground().setState(focused ? FOCUSED_STATE_SET : EMPTY_STATE_SET);
         invalidate();
     }
 
@@ -248,7 +243,7 @@ public class SearchTextView extends LinearLayout {
         boolean onQueryTextSubmit(String query);
     }
 
-    public static class SearchAutoComplete extends AppCompatAutoCompleteTextView {
+    public static class SearchAutoComplete extends AutoCompleteTextView {
         private int mThreshold;
         private SearchTextView mSearchView;
 
